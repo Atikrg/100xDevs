@@ -1,4 +1,4 @@
-import {app} from "./app";
+import app from "./app";
 import { prisma } from "./db";
 
 const PORT = process.env.SERVER_PORT;
