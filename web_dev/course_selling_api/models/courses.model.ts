@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { prisma } from "../db"
-import { CreateCourseSchema, UpdateCourseSchema } from "../schema/courses.schema"
+import { CreateCourseSchema, UpdateCourseSchema } from "../schema/courses.schema";
+import { ApiPagination } from "./pagination.model";
 
 type CreateCourseInput = z.infer<typeof CreateCourseSchema>
 
@@ -25,17 +26,24 @@ export async function createCourseModal(course: CreateCourseInput, userId: strin
 }
 
 
-export async function getCoursesModal() {
-    try {
-        const courses = await prisma.course.findMany({
+export async function getCoursesModal(pagination: ApiPagination) {
+    const [courses, total] = await prisma.$transaction([
+        prisma.course.findMany({
+            skip: pagination.skip,
+            take: pagination.limit,
+        }),
+        prisma.course.count(),
+    ]);
 
-        });
+    const totalPages = Math.ceil(total / pagination.limit);
 
-        return courses;
-    } catch (error) {
-        throw error
-    }
+    return {
+        courses,
+        total,
+        totalPages,
+    };
 }
+
 
 
 export async function getACourseModal(id: string) {
@@ -60,7 +68,7 @@ type CourseUpdate = {
 
 export async function updateCourseModal(course: CourseUpdate, id: string) {
     try {
-        
+
         const validatedData = UpdateCourseSchema.parse(course);
         const updateCourse = await prisma.course.update({
             where: {

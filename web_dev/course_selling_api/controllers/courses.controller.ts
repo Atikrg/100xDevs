@@ -2,12 +2,18 @@ import type { Request, Response } from "express";
 import { CreateCourseSchema, UpdateCourseSchema, CourseParamsSchema } from "../schema/courses.schema";
 import { createCourseModal, deleteCourseModal, getACourseModal, getCoursesModal, updateCourseModal } from "../models/courses.model";
 import { parse, success } from "zod";
+import { ApiPagination } from "../models/pagination.model";
 
 
 export const createCourseController = async (request: Request, response: Response) => {
     try {
 
         const requestBody = request.body;
+
+
+        if (!request.user) {
+            return response.status(401).json({ success: "fail", message: "Unauthorized" });
+        }
 
         const userId = request.user.id;
 
@@ -42,32 +48,39 @@ export const createCourseController = async (request: Request, response: Respons
 
 export const getAllCoursesController = async (request: Request, response: Response) => {
     try {
+        const page = Number(request.query.page) || 1;
+        const limit = Number(request.query.limit) || 10;
 
-        const courses = await getCoursesModal();
+        const pagination = new ApiPagination(page, limit);
 
+        const { courses, total, totalPages } = await getCoursesModal(pagination);
 
-        if (courses.length == 0) {
+        if (courses.length === 0) {
             return response.status(404).json({
                 success: "fail",
-                message: "Resource not found"
-            })
+                message: "Resource not found",
+            });
         }
-
 
         return response.status(200).json({
             success: "success",
             results: {
-                courses
-            }
-        })
-
-    } catch (error: any) {
+                data: courses,
+                total,
+                totalPages,
+                page,
+                limit,
+            },
+        });
+    } catch (error) {
+        console.error(error);
         return response.status(500).json({
             success: "fail",
-            message: "Intrnal Server Error"
-        })
+            message: "Internal Server Error",
+        });
     }
-}
+};
+
 
 
 export const getACourseController = async (request: Request, response: Response) => {
@@ -140,8 +153,7 @@ export const updateCourseController = async (request: Request, response: Respons
 
         const updatedCourse = await updateCourseModal(parseData, id);
 
-        if(updatedCourse === null)
-        {
+        if (updatedCourse === null) {
             return response.status(404).json({
                 success: "fail",
                 message: "Cannot update. Course not found"
@@ -185,8 +197,7 @@ export const deleteCourseController = async (request: Request, response: Respons
         const deleteCourse = await deleteCourseModal(id);
 
 
-        if(deleteCourse === null)
-        {
+        if (deleteCourse === null) {
             return response.status(404).json({
                 success: 'fail',
                 message: "Course not found"
