@@ -1,20 +1,8 @@
 import type { Request, Response } from "express";
 import z from "zod/v3";
-import { createUser } from "../models/auth.models";
-import { success } from "zod";
-
-const UserSignupSchema = z.object({
-    username: z.string(),
-    password: z.string().min(6, "Password must be atleast 6 character"),
-    confirmPassword: z.string(),
-    role: z.string(),
-    email: z.string(),
-
-})
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Password does not match",
-        path: ["confirmPassword"]
-    })
+import { createUser, loginUser } from "../models/auth.model";
+import { UserLoginSchema, UserSignupSchema } from "../schema/auth.schema";
+import { generateJwtToken } from "../handler";
 
 
 export const signupController = async (request: Request, response: Response) => {
@@ -24,7 +12,6 @@ export const signupController = async (request: Request, response: Response) => 
 
         const parametersParse = UserSignupSchema.safeParse(requestBody);
 
-        console.log("parametersParse", parametersParse);
 
         if (parametersParse.success === false) {
             return response.status(400).json({
@@ -35,18 +22,15 @@ export const signupController = async (request: Request, response: Response) => 
         }
 
 
-        const userName = requestBody.username;
-        const password = requestBody.password;
-        const email = requestBody.email;
+        const userSignUpCredentials = {
+            username: requestBody.username,
+            password: requestBody.password,
+            email: requestBody.email,
+            role: requestBody.role
+        }
 
-        await createUser(
-            {
-                username: userName,
-                password: password,
-                email: email
-            }
 
-        );
+        await createUser(userSignUpCredentials);
 
         return response.status(200).json(
             {
@@ -57,7 +41,6 @@ export const signupController = async (request: Request, response: Response) => 
 
 
     } catch (error: any) {
-        console.error("Error", error.message);
 
         if (error.message === "Email already exists") {
             return response.status(400).json({ message: "User already exists" });
@@ -75,11 +58,6 @@ export const signupController = async (request: Request, response: Response) => 
 
 
 
-const UserLoginSchema = z.object({
-    username: z.string(),
-    password: z.string()
-})
-
 export const loginController = async (request: Request, response: Response) => {
     try {
 
@@ -96,6 +74,39 @@ export const loginController = async (request: Request, response: Response) => {
             })
         }
 
+        const loginCredentials = {
+            password: requestBody.password,
+            email: requestBody.email
+        }
+
+        const user = await loginUser(loginCredentials);
+
+
+        if (!user) {
+            return response.status(404).json({
+                success: "fail",
+                message: "No user found"
+            })
+        }
+
+
+        const jwtTokenPayload = {
+            id: user.id,
+            role: user.role
+        }
+
+
+
+        const jwtToken = await generateJwtToken(jwtTokenPayload);
+
+        return response.status(200).json({
+            success: "success",
+            message: "Successfully logged in",
+            data: {
+                token: jwtToken
+            }
+        })
+
 
     } catch (error: any) {
         return response.status(500).json({
@@ -104,3 +115,4 @@ export const loginController = async (request: Request, response: Response) => {
         })
     }
 }
+
