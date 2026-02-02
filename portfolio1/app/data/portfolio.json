@@ -2,6 +2,11 @@
     "hero": {
         "name": "Atik S. Rangnekar",
         "title": "Full Stack Developer",
+        "titles": [
+            "Full Stack Developer & DevOps",
+            "Machine Learning Engineer",
+            "Web 3.0 Developer"
+        ],
         "location": "Ratnagiri",
         "tagline": "Building digital experiences that matter.",
         "image": "/baymax.jpg",
@@ -33,6 +38,18 @@
             {
                 "platform": "LinkedIn",
                 "url": "https://linkedin.com/in/janedoe"
+            },
+            {
+                "platform": "LeetCode",
+                "url": "https://leetcode.com/"
+            },
+            {
+                "platform": "CodeChef",
+                "url": "https://www.codechef.com/"
+            },
+            {
+                "platform": "Medium",
+                "url": "https://medium.com/"
             }
         ]
     },
@@ -98,8 +115,17 @@
             "link": "#"
         }
     ],
+    "education": [
+        {
+            "degree": "Bachelor of Engineering in Information Technology",
+            "institution": "Mumbai University",
+            "period": "2018 - 2022",
+            "description": "Focused on Software Engineering, Data Structures, and Database Management Systems."
+        }
+    ],
     "contact": {
-        "email": "jane@example.com",
+        "email": "atikrangnekar28@gmail.com",
+        "bookingUrl": "https://cal.com/atikrangnekar/book",
         "cta": "Get in Touch"
     }
 }

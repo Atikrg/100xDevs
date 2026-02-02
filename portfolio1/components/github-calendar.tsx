@@ -26,18 +26,21 @@ export function GitHubCalendarComponent({ username }: GitHubCalendarComponentPro
     }
 
     return (
-        <div className="w-full overflow-x-auto flex justify-center">
-            <GitHubCalendar
-                username={username}
-                colorScheme={theme === "dark" ? "dark" : "light"}
-                blockSize={12}
-                blockMargin={4}
-                fontSize={14}
-                theme={{
-                    light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
-                    dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
-                }}
-            />
+        <div className="w-full flex justify-center items-center">
+            <div className="relative w-full max-w-[800px] overflow-hidden flex justify-center [&_svg]:w-full [&_svg]:h-auto">
+                <div className="absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(rgba(0,0,0,0.4)_1px,transparent_1px)] [background-size:4px_4px] opacity-30 dark:opacity-20 mix-blend-overlay" />
+                <GitHubCalendar
+                    username={username}
+                    colorScheme={theme === "dark" ? "dark" : "light"}
+                    blockSize={13}
+                    blockMargin={4}
+                    fontSize={14}
+                    theme={{
+                        light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
+                        dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+                    }}
+                />
+            </div>
         </div>
     );
 }

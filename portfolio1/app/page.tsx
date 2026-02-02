@@ -6,22 +6,32 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin } from "lucide-react";
+import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin, Calendar } from "lucide-react";
+import { SiLeetcode, SiCodechef, SiMedium } from "react-icons/si";
 import { ModeToggle } from "@/components/mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TechIcon } from "@/components/tech-icon";
 import { GitHubCalendarComponent } from "@/components/github-calendar";
 
 export default function Home() {
-  const { hero, about, experience, projects, blogs, contact } = portfolioData;
+  const { hero, about, experience, projects, blogs, education, contact } = portfolioData;
+
+  const [titleIndex, setTitleIndex] = useState(0);
+  const titles = hero.titles || [hero.title];
+
+  useEffect(() => {
+    if (titles.length > 1) {
+      const interval = setInterval(() => {
+        setTitleIndex((prev) => (prev + 1) % titles.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [titles]);
 
   return (
     <div className="min-h-screen bg-transparent font-sans relative">
-      {/* Mode Toggle - positioned absolutely */}
-      <div className="fixed top-4 right-4 z-50 animate-in fade-in zoom-in duration-500">
-        <ModeToggle />
-      </div>
+
 
       {/* Background with Dot Pattern */}
       <div className="fixed inset-0 z-[-1] bg-background">
@@ -29,7 +39,10 @@ export default function Home() {
       </div>
 
       {/* Main Content Container */}
-      <div className="max-w-4xl mx-auto min-h-screen bg-background/50 backdrop-blur-sm border-x border-border/40 shadow-2xl">
+      <div className="max-w-4xl mx-auto min-h-screen bg-background/50 backdrop-blur-sm border-x border-border/40 shadow-2xl relative">
+        <div className="absolute top-6 right-6 z-50">
+          <ModeToggle />
+        </div>
 
         {/* Profile Header */}
         <section className="pt-20 pb-12 px-6 md:px-12">
@@ -56,7 +69,23 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
                   {hero.name}
                 </h1>
-                <p className="text-xl text-muted-foreground mt-2 font-light">{hero.title}</p>
+
+                {/* Animated Title */}
+                <div className="h-8 md:h-9 relative overflow-hidden mt-2">
+                  <AnimatePresence mode="wait">
+                    <motion.h2
+                      key={titleIndex}
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -20, opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="text-xl md:text-2xl text-muted-foreground font-light absolute top-0 left-0 right-0 md:left-auto md:right-auto w-full md:w-auto"
+                    >
+                      {titles[titleIndex]}
+                    </motion.h2>
+                  </AnimatePresence>
+                </div>
+
                 {hero.location && (
                   <div className="flex items-center justify-center md:justify-start gap-2 mt-2 text-sm text-muted-foreground/80">
                     <MapPin className="h-4 w-4" />
@@ -69,18 +98,23 @@ export default function Home() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="flex gap-3 justify-center md:justify-start"
+                className="flex gap-3 justify-center md:justify-start flex-wrap"
               >
                 {hero.socials.map((social) => {
                   const Icon =
                     social.platform === "GitHub" ? Github :
                       social.platform === "LinkedIn" ? Linkedin :
                         social.platform === "Twitter" ? Twitter :
-                          ExternalLink;
+                          social.platform === "LeetCode" ? SiLeetcode :
+                            social.platform === "CodeChef" ? SiCodechef :
+                              social.platform === "Medium" ? SiMedium :
+                                ExternalLink;
+
                   return (
                     <Button key={social.platform} variant="ghost" size="icon" asChild className="hover:bg-foreground/10 hover:scale-110 transition-all">
-                      <a href={social.url} target="_blank" rel="noreferrer">
+                      <a href={social.url} target="_blank" rel="noreferrer" title={social.platform}>
                         <Icon className="h-5 w-5" />
+                        <span className="sr-only">{social.platform}</span>
                       </a>
                     </Button>
                   )
@@ -111,11 +145,11 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <Separator className="my-8 mx-auto w-10/12 opacity-50" />
+        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
 
         {/* GitHub Contribution Heatmap */}
         {hero.githubUsername && (
-          <section className="py-12 px-6 md:px-12">
+          <section className="py-8 px-6 md:px-12">
             <h2 className="text-2xl font-bold mb-8">GitHub Activity</h2>
             <div className="p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/20 transition-colors">
               <GitHubCalendarComponent username={hero.githubUsername} />
@@ -124,7 +158,7 @@ export default function Home() {
         )}
 
         {/* Experience Section - Timeline Style */}
-        <section className="py-12 px-6 md:px-12">
+        <section className="py-8 px-6 md:px-12">
           <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
             <span className="w-8 h-1 bg-primary rounded-full"></span>
             Experience
@@ -148,10 +182,10 @@ export default function Home() {
           </div>
         </section>
 
-        <Separator className="my-8 mx-auto w-10/12 opacity-50" />
+        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
 
         {/* Projects Section */}
-        <section className="py-12 px-6 md:px-12">
+        <section className="py-8 px-6 md:px-12">
           <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
             <span className="w-8 h-1 bg-primary rounded-full"></span>
             Featured Projects
@@ -197,7 +231,7 @@ export default function Home() {
         </section>
 
         {/* Latest Articles */}
-        <section className="py-12 px-6 md:px-12">
+        <section className="py-8 px-6 md:px-12">
           <h2 className="text-2xl font-bold mb-8">Latest Writings</h2>
           <div className="grid gap-4">
             {blogs && blogs.map((blog, index) => (
@@ -216,15 +250,42 @@ export default function Home() {
           </div>
         </section>
 
+        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
+
+        {/* Education Section */}
+        <section className="py-8 px-6 md:px-12">
+          <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-1 bg-primary rounded-full"></span>
+            Education
+          </h2>
+          <div className="relative border-l-2 border-primary/20 ml-3 space-y-12">
+            {education && education.map((edu, index) => (
+              <div key={index} className="relative pl-8 md:pl-12">
+                {/* Timeline Dot */}
+                <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-4 border-background bg-primary shadow-sm" />
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <h3 className="text-xl font-bold">{edu.degree}</h3>
+                  <Badge variant="secondary" className="w-fit mt-1 sm:mt-0 opacity-80">{edu.period}</Badge>
+                </div>
+                <div className="text-lg text-primary font-medium mb-2">{edu.institution}</div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {edu.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Contact */}
-        <section className="py-20 px-6 text-center bg-gradient-to-b from-transparent to-primary/5">
+        <section className="py-12 px-6 text-center bg-gradient-to-b from-transparent to-primary/5">
           <h2 className="text-3xl font-bold mb-4">Let's Build Something Together</h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
             I'm currently available for freelance work and open source collaborations.
           </p>
           <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-primary/25 transition-all hover:-translate-y-1" asChild>
-            <a href={`mailto:${contact.email}`}>
-              <Mail className="mr-2 h-4 w-4" /> {contact.cta}
+            <a href={contact.bookingUrl} target="_blank" rel="noopener noreferrer">
+              <Calendar className="mr-2 h-4 w-4" /> {contact.cta}
             </a>
           </Button>
         </section>
