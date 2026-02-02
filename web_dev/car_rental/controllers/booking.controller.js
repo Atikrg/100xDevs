@@ -5,7 +5,6 @@ exports.createBooking = async (req, res) => {
 
     try {
     
-
         const { carName, days, rentPerDay } = req.body;
 
         const userId = req.user.id;
@@ -17,14 +16,10 @@ exports.createBooking = async (req, res) => {
 
         const totalAmount = days * rentPerDay;
         
-        console.log("Total Amount:", totalAmount);
-        console.log("Days:", days);
 
         if (rentPerDay > 2000 && days <= 365) {
             return res.status(400).json({ message: 'Invalid Inputs' });
         }
-
-        console.log("Creating booking for user:", userId, carName, days, rentPerDay);
 
         const insertQuery = 'INSERT INTO bookings (user_id, car_name, days,  rent_per_day) VALUES ($1, $2, $3, $4) RETURNING id';
         const values = [userId, carName, days, totalAmount];
@@ -149,15 +144,11 @@ exports.deleteBooking = async (req, res) => {
       RETURNING id
     `;
 
-
-    console.log("bookingId:", bookingId, "userId:", userId);
-
     const result = await pool.query(query, [
       bookingId,
       userId,
     ]);
 
-    console.log(result);
 
     if(result.length === 0) {
       return res.status(404).json({
