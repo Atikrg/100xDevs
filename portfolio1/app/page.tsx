@@ -186,33 +186,6 @@ export default function Home() {
           </section>
         )}
 
-        {/* Experience Section - Timeline Style */}
-        <section className="py-8 px-6 md:px-12">
-          <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-            <span className="w-8 h-1 bg-primary rounded-full"></span>
-            Experience
-          </h2>
-          <div className="relative border-l-2 border-primary/20 ml-3 space-y-12">
-            {experience.map((exp, index) => (
-              <div key={index} className="relative pl-8 md:pl-12">
-                {/* Timeline Dot */}
-                <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-4 border-background bg-primary shadow-sm" />
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                  <h3 className="text-xl font-bold">{exp.role}</h3>
-                  <Badge variant="secondary" className="w-fit mt-1 sm:mt-0 opacity-80">{exp.period}</Badge>
-                </div>
-                <div className="text-lg text-primary font-medium mb-2">{exp.company}</div>
-                <p className="text-muted-foreground leading-relaxed">
-                  {exp.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
-
         {/* Projects Section */}
         <section className="py-8 px-6 md:px-12">
           <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
@@ -259,6 +232,9 @@ export default function Home() {
           </div>
         </section>
 
+        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
+
+
         {/* Latest Articles */}
         <section className="py-8 px-6 md:px-12">
           <h2 className="text-2xl font-bold mb-8">Latest Writings</h2>
@@ -278,6 +254,35 @@ export default function Home() {
             ))}
           </div>
         </section>
+        <Separator className="my-6 mx-auto w-10/12 opacity-50" />
+
+
+        {/* Experience Section - Timeline Style */}
+        <section className="py-8 px-6 md:px-12">
+          <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+            <span className="w-8 h-1 bg-primary rounded-full"></span>
+            Experience
+          </h2>
+          <div className="relative border-l-2 border-primary/20 ml-3 space-y-12">
+            {experience.map((exp, index) => (
+              <div key={index} className="relative pl-8 md:pl-12">
+                {/* Timeline Dot */}
+                <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full border-4 border-background bg-primary shadow-sm" />
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <h3 className="text-xl font-bold">{exp.role}</h3>
+                  <Badge variant="secondary" className="w-fit mt-1 sm:mt-0 opacity-80">{exp.period}</Badge>
+                </div>
+                <div className="text-lg text-primary font-medium mb-2">{exp.company}</div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {exp.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+
 
         <Separator className="my-6 mx-auto w-10/12 opacity-50" />
 
