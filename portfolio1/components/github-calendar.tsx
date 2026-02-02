@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GitHubCalendar } from "react-github-calendar";
 
 interface GitHubCalendarComponentProps {
@@ -38,6 +38,17 @@ export function GitHubCalendarComponent({ username }: GitHubCalendarComponentPro
                     theme={{
                         light: ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"],
                         dark: ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"],
+                    }}
+                    renderBlock={(block, activity) => {
+                        // Fallback for valid activity
+                        if (!activity) return block;
+                        return React.cloneElement(block, {
+                            children: (
+                                <title>
+                                    {`${activity.count} activities on ${new Date(activity.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`}
+                                </title>
+                            ),
+                        });
                     }}
                 />
             </div>
