@@ -8,13 +8,29 @@ import Link from "next/link";
 
 export default function AdminPage() {
     const [jsonContent, setJsonContent] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+    const [password, setPassword] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [inputPassword, setInputPassword] = useState("");
 
     useEffect(() => {
-        fetchData();
+        const saved = localStorage.getItem("admin_password");
+        if (saved) {
+            setPassword(saved);
+            setIsAuthenticated(true);
+            fetchData();
+        }
     }, []);
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        localStorage.setItem("admin_password", inputPassword);
+        setPassword(inputPassword);
+        setIsAuthenticated(true);
+        fetchData();
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -42,23 +58,55 @@ export default function AdminPage() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'x-admin-password': password
                 },
                 body: JSON.stringify(parsed),
             });
 
+            if (res.status === 401) {
+                setIsAuthenticated(false);
+                localStorage.removeItem("admin_password");
+                throw new Error("Unauthorized: Invalid Password");
+            }
+
             if (!res.ok) throw new Error("Failed to save");
 
             setMessage({ type: 'success', text: "Portfolio updated successfully!" });
-        } catch (error) {
+        } catch (error: any) {
             if (error instanceof SyntaxError) {
                 setMessage({ type: 'error', text: "Invalid JSON format. Please check your syntax." });
             } else {
-                setMessage({ type: 'error', text: "Failed to save changes." });
+                setMessage({ type: 'error', text: error.message || "Failed to save changes." });
             }
         } finally {
             setSaving(false);
         }
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-background p-6">
+                <Card className="w-full max-w-md border-border/50 shadow-xl">
+                    <CardHeader>
+                        <CardTitle>Admin Access</CardTitle>
+                        <CardDescription>Enter the admin password to continue.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleLogin} className="space-y-4">
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                value={inputPassword}
+                                onChange={(e) => setInputPassword(e.target.value)}
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            />
+                            <Button type="submit" className="w-full">Login</Button>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background p-6 md:p-12 font-sans">
@@ -76,6 +124,12 @@ export default function AdminPage() {
                         </div>
                     </div>
                     <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => {
+                            localStorage.removeItem("admin_password");
+                            setIsAuthenticated(false);
+                        }} size="sm">
+                            Logout
+                        </Button>
                         <Button variant="outline" onClick={fetchData} disabled={loading || saving} size="icon">
                             <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
                         </Button>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin, Calendar } from "lucide-react";
+import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin, Calendar, BadgeCheck } from "lucide-react";
 import { SiLeetcode, SiCodechef, SiMedium } from "react-icons/si";
 import { ModeToggle } from "@/components/mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
@@ -39,7 +39,7 @@ export default function Home() {
       </div>
 
       {/* Main Content Container */}
-      <div className="max-w-4xl mx-auto min-h-screen bg-background/50 backdrop-blur-sm border-x border-border/40 shadow-2xl relative">
+      <div className="max-w-4xl mx-auto min-h-screen bg-white/5 dark:bg-black/5 backdrop-blur-xl border-x border-white/20 dark:border-white/10 shadow-2xl relative">
         <div className="absolute top-6 right-6 z-50">
           <ModeToggle />
         </div>
@@ -66,9 +66,12 @@ export default function Home() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-                  {hero.name}
-                </h1>
+                <div className="flex items-center justify-center md:justify-start gap-3">
+                  <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                    {hero.name}
+                  </h1>
+                  <BadgeCheck className="h-8 w-8 text-white fill-blue-500" />
+                </div>
 
                 {/* Animated Title */}
                 <div className="h-8 md:h-9 relative overflow-hidden mt-2">
@@ -90,6 +93,14 @@ export default function Home() {
                   <div className="flex items-center justify-center md:justify-start gap-2 mt-2 text-sm text-muted-foreground/80">
                     <MapPin className="h-4 w-4" />
                     <span>{hero.location}</span>
+                  </div>
+                )}
+                {contact.email && (
+                  <div className="flex items-center justify-center md:justify-start gap-2 mt-1 text-sm text-muted-foreground/80">
+                    <Mail className="h-4 w-4" />
+                    <a href={`mailto:${contact.email}`} className="hover:text-primary transition-colors hover:underline">
+                      {contact.email}
+                    </a>
                   </div>
                 )}
               </motion.div>
@@ -119,6 +130,24 @@ export default function Home() {
                     </Button>
                   )
                 })}
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="pt-2 flex justify-center md:justify-start"
+              >
+                <Button
+                  size="lg"
+                  className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold tracking-wide border-0 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 active:scale-95 group relative overflow-hidden"
+                  asChild
+                >
+                  <a href={contact.bookingUrl} target="_blank" rel="noopener noreferrer">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                    <Calendar className="mr-2 h-4 w-4" /> Get in Touch
+                  </a>
+                </Button>
               </motion.div>
             </div>
           </div>
@@ -201,11 +230,11 @@ export default function Home() {
                   <div className="order-2 md:order-1 space-y-4">
                     <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">{project.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.map(tech => (
-                        <span key={tech} className="text-xs font-mono font-medium text-primary/80 bg-primary/10 px-2 py-1 rounded">
-                          {tech}
-                        </span>
+                    <div className="flex items-center -space-x-3 py-1">
+                      {project.technologies.map((tech, i) => (
+                        <div key={tech} className="relative z-0 hover:z-50 transition-all duration-200">
+                          <TechIcon tech={tech} index={i} />
+                        </div>
                       ))}
                     </div>
                     <div className="pt-4">
@@ -268,7 +297,8 @@ export default function Home() {
                   <h3 className="text-xl font-bold">{edu.degree}</h3>
                   <Badge variant="secondary" className="w-fit mt-1 sm:mt-0 opacity-80">{edu.period}</Badge>
                 </div>
-                <div className="text-lg text-primary font-medium mb-2">{edu.institution}</div>
+                <div className="text-lg text-primary font-medium mb-1">{edu.institution}</div>
+                {edu.college && <div className="text-base text-muted-foreground font-medium mb-2">{edu.college}</div>}
                 <p className="text-muted-foreground leading-relaxed">
                   {edu.description}
                 </p>

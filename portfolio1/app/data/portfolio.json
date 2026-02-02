@@ -24,33 +24,23 @@
             "Terraform",
             "Docker",
             "Kubernetes (Basics)",
-            "Flutter"
+            "Flutter",
+            "Express.js"
         ],
         "socials": [
             {
                 "platform": "GitHub",
-                "url": "https://github.com/janedoe"
+                "url": "https://github.com/Atikrg"
             },
             {
                 "platform": "Twitter",
-                "url": "https://twitter.com/janedoe"
+                "url": "https://x.com/atikrangnekar"
             },
             {
                 "platform": "LinkedIn",
-                "url": "https://linkedin.com/in/janedoe"
-            },
-            {
-                "platform": "LeetCode",
-                "url": "https://leetcode.com/"
-            },
-            {
-                "platform": "CodeChef",
-                "url": "https://www.codechef.com/"
-            },
-            {
-                "platform": "Medium",
-                "url": "https://medium.com/"
+                "url": "https://www.linkedin.com/in/atik-rangnekar/"
             }
+          
         ]
     },
     "about": {
@@ -117,10 +107,11 @@
     ],
     "education": [
         {
-            "degree": "Bachelor of Engineering in Information Technology",
+            "degree": "Masters in Computer Applications",
             "institution": "Mumbai University",
-            "period": "2018 - 2022",
-            "description": "Focused on Software Engineering, Data Structures, and Database Management Systems."
+            "college": "Finolex Academy of Management and Technology",
+            "period": "2022 - 2024",
+            "description": "Focused on Full stack, Web 3.0, Advanced Algorithms, Machine Learning, and Distributed Systems."
         }
     ],
     "contact": {

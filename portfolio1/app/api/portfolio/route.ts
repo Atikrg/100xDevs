@@ -15,6 +15,14 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
+        const authHeader = request.headers.get('x-admin-password');
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
+        if (!adminPassword || authHeader !== adminPassword) {
+            console.error("Admin password not configured or incorrect.");
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const newData = await request.json();
         // Basic validation: check if it's a valid object
         if (!newData || typeof newData !== 'object') {

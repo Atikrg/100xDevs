@@ -18,7 +18,8 @@ import {
     SiFlutter,
     SiFirebase,
     SiMui,
-    SiStripe
+    SiStripe,
+    SiExpress
 } from "react-icons/si";
 import { IconType } from "react-icons";
 
@@ -40,6 +41,8 @@ const techIconMap: Record<string, IconType> = {
     "Tailwind CSS": SiTailwindcss,
     "Nodejs": SiNodedotjs,
     "Node.js": SiNodedotjs,
+    "Express.js": SiExpress,
+    "Express": SiExpress,
     "MySQL": SiMysql,
     "Terraform": SiTerraform,
     "Docker": SiDocker,
@@ -64,6 +67,8 @@ const techColorMap: Record<string, string> = {
     "Tailwind CSS": "#06B6D4",
     "Nodejs": "#339933",
     "Node.js": "#339933",
+    "Express.js": "#000000",
+    "Express": "#000000",
     "MySQL": "#4479A1",
     "Terraform": "#7B42BC",
     "Docker": "#2496ED",
@@ -86,9 +91,8 @@ export function TechIcon({ tech, index }: TechIconProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{
                 delay: index * 0.05,
-                type: "spring",
-                stiffness: 260,
-                damping: 15
+                duration: 0.3,
+                ease: "easeOut"
             }}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
@@ -96,11 +100,11 @@ export function TechIcon({ tech, index }: TechIconProps) {
         >
             {/* Glow effect on hover */}
             <motion.div
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/40 via-accent/40 to-primary/40 blur-md"
+                className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary/40 via-accent/40 to-primary/40 blur-md"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{
                     opacity: isHovered ? 1 : 0,
-                    scale: isHovered ? 1.2 : 0.8
+                    scale: isHovered ? 1.1 : 0.8
                 }}
                 transition={{ duration: 0.3 }}
             />
@@ -109,18 +113,18 @@ export function TechIcon({ tech, index }: TechIconProps) {
                 layout
                 className="relative flex items-center justify-center cursor-pointer overflow-hidden backdrop-blur-sm bg-gradient-to-br from-background/80 via-background/60 to-background/80 ring-1 ring-primary/20"
                 style={{
-                    borderRadius: "9999px",
+                    borderRadius: "12px",
                 }}
                 animate={{
-                    paddingLeft: isHovered ? "12px" : "6px",
-                    paddingRight: isHovered ? "12px" : "6px",
+                    paddingLeft: isHovered ? "12px" : "8px",
+                    paddingRight: isHovered ? "12px" : "8px",
                     paddingTop: "6px",
                     paddingBottom: "6px",
                 }}
                 transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 15
+                    type: "tween",
+                    duration: 0.2,
+                    ease: "easeInOut"
                 }}
             >
                 {/* Gradient overlay */}
@@ -138,7 +142,7 @@ export function TechIcon({ tech, index }: TechIconProps) {
                     }}
                 />
 
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                     {!isHovered ? (
                         <motion.div
                             key="icon"
@@ -163,9 +167,9 @@ export function TechIcon({ tech, index }: TechIconProps) {
                             animate={{ opacity: 1, width: "auto" }}
                             exit={{ opacity: 0, width: 0 }}
                             transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 15
+                                type: "tween",
+                                duration: 0.2,
+                                ease: "easeInOut"
                             }}
                             className="relative text-xs font-semibold whitespace-nowrap px-1"
                             style={{ color: brandColor }}
