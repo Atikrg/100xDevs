@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'app/data/portfolio.json');
+const DATA_FILE_PATH = path.join(process.cwd(), 'public/portfolio.json');
 
 export async function GET() {
     try {

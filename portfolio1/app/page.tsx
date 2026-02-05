@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin, Calendar, BadgeCheck } from "lucide-react";
+import { Mail, Github, Linkedin, Twitter, ExternalLink, MapPin, Calendar, BadgeCheck, FileText } from "lucide-react";
 import { SiLeetcode, SiCodechef, SiMedium } from "react-icons/si";
 import { ModeToggle } from "@/components/mode-toggle";
 import { motion, AnimatePresence } from "framer-motion";
@@ -136,7 +136,7 @@ export default function Home() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="pt-2 flex justify-center md:justify-start"
+                className="pt-2 flex flex-wrap gap-4 justify-center md:justify-start"
               >
                 <Button
                   size="lg"
@@ -148,6 +148,19 @@ export default function Home() {
                     <Calendar className="mr-2 h-4 w-4" /> Get in Touch
                   </a>
                 </Button>
+
+                {hero.resume && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="rounded-xl border-primary/20 hover:border-primary/50 bg-background/50 backdrop-blur-sm hover:bg-accent/50 text-foreground font-bold tracking-wide shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
+                    asChild
+                  >
+                    <a href={hero.resume} target="_blank" rel="noopener noreferrer">
+                      <FileText className="mr-2 h-4 w-4" /> Resume
+                    </a>
+                  </Button>
+                )}
               </motion.div>
             </div>
           </div>
